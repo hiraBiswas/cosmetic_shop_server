@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
+require('dotenv').config();
 const port = process.env.PORT || 5200;
 
 //middleware
@@ -31,6 +32,7 @@ async function run() {
     // await client.connect();
 
     const productCollection = client.db('productDB').collection('product')
+    const cartCollection = client.db('productDB').collection('cart');
 
     app.get('/product', async (req, res) => {
       const cursor = productCollection.find()
@@ -75,6 +77,67 @@ async function run() {
       const result = await productCollection.insertOne(newProduct)
       res.send(result)
     })
+
+    app.post('/cart', async (req, res) => {
+      
+      const cartItem = req.body;
+      console.log(cartItem)
+      const result = await cartCollection.insertOne(cartItem);
+    
+      res.send(result);
+    });
+
+    app.get('/cart', async (req, res) => {
+      const cursor = cartCollection.find()
+      const result = await cursor.toArray()
+      res.send(result)
+    });
+    
+
+    app.delete('/cart/:itemId', async (req, res) => {
+  try {
+    const itemId = req.params.itemId;
+
+    // Assuming you are using MongoDB as the database and `cartCollection` is your MongoDB collection
+    const result = await cartCollection.deleteOne({ _id: new ObjectId(itemId) });
+
+    if (result.deletedCount === 1) {
+      // Item was deleted successfully
+      res.status(204).send(); // Respond with a 204 No Content status
+    } else {
+      // Item with the provided itemId was not found
+      res.status(404).json({ error: 'Item not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+app.delete('/cart/:itemId', async (req, res) => {
+  try {
+    const itemId = req.params.itemId;
+
+    const result = await cartCollection.deleteOne({ _id: new ObjectId(itemId) });
+
+    if (result.deletedCount === 1) {
+    
+      res.status(204).send(); // Respond with a 204 No Content status
+    } else {
+     
+      res.status(404).json({ error: 'Item not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });

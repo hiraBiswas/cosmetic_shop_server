@@ -149,7 +149,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-  res.send('cosmetic store server is running')
+  res.send('store server is running')
 })
 
 app.listen(port, () => {

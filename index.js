@@ -153,5 +153,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`cosmetic store is running on port: ${port}`)
+  console.log(` store is running on port: ${port}`)
 })

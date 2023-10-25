@@ -18,6 +18,7 @@ console.log(uri)
 
 
 const client = new MongoClient(uri, {
+
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
@@ -100,10 +101,10 @@ async function run() {
     const result = await cartCollection.deleteOne({ _id: new ObjectId(itemId) });
 
     if (result.deletedCount === 1) {
-      // Item was deleted successfully
-      res.status(204).send(); // Respond with a 204 No Content status
+     
+      res.status(204).send(); 
     } else {
-      // Item with the provided itemId was not found
+    
       res.status(404).json({ error: 'Item not found' });
     }
   } catch (error) {
@@ -122,7 +123,7 @@ app.delete('/cart/:itemId', async (req, res) => {
 
     if (result.deletedCount === 1) {
     
-      res.status(204).send(); // Respond with a 204 No Content status
+      res.status(204).send(); 
     } else {
      
       res.status(404).json({ error: 'Item not found' });
